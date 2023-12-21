@@ -10,7 +10,9 @@ export const QuizValidationSchema = {
   }),
 
   editQuizZodSchema: z.object({
-    title: z.string().optional(),
-    category: z.string().optional(),
+    body: z.object({
+      title: z.string().optional(),
+      category: z.string().optional(),
+    })
   }),
 };

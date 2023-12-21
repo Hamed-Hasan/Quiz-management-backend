@@ -19,4 +19,4 @@ router.put(
 
 router.delete('/:id', QuizController.deleteQuiz);
 
-export const QuizRoutes = router;
+export const QuizManage = router;
