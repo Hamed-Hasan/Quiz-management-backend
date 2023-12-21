@@ -1,78 +1,79 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id                  String         @id @default(uuid())
-    email               String         @unique
-    password            String
-    needsPasswordChange Boolean?       @default(false)
-    role                UserRole       @default(user)
-    createdAt           DateTime       @default(now())
-    updatedAt           DateTime       @default(now()) @updatedAt
-    profile             Profile?
-    quizzes             Quiz[]         @relation("QuizTaker")
-    scores              Score[]
+  id                  String         @id @default(uuid())
+  email               String         @unique
+  password            String
+  needsPasswordChange Boolean?       @default(false)
+  role                UserRole       @default(user)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now()) @updatedAt
+
+  profile             Profile?
+  quizzes             Quiz[]        
+  scores              Score[]
 }
 
 model Profile {
-    id           String    @id @default(uuid())
-    userId       String    @unique
-    user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    username     String?   @unique
-    firstName    String?
-    lastName     String?
-    dateOfBirth  DateTime?
-    phoneNumber  String?
-    address      String?
-    bio          String?
-    profileImage String?
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @default(now()) @updatedAt
+  id           String    @id @default(uuid())
+  userId       String    @unique
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  username     String?   @unique
+  firstName    String?
+  lastName     String?
+  dateOfBirth  DateTime?
+  phoneNumber  String?
+  address      String?
+  bio          String?
+  profileImage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
 }
 
 model Quiz {
-    id          Int        @id @default(autoincrement())
-    title       String
-    category    String     // e.g., frontend, fullstack, react.js, javascript
-    questions   Question[]
-    creator     User       @relation("QuizCreator", fields: [creatorId], references: [id])
-    creatorId   String
-    scores      Score[]
+  id            String    @id @default(uuid())
+  title         String
+  category      String    
+  questions     Question[]
+  creator       User       @relation( fields: [creatorId], references: [id])
+  creatorId     String
+  scores        Score[]
 }
 
 model Question {
-    id         Int      @id @default(autoincrement())
-    content    String
-    options    Answer[]
-    correctOptionId Int
-    quiz       Quiz     @relation(fields: [quizId], references: [id])
-    quizId     Int
+  id              String    @id @default(uuid())
+  content         String
+  options         Answer[]
+  correctOptionId Int
+  quiz            Quiz     @relation(fields: [quizId], references: [id])
+  quizId          String
 }
 
 model Answer {
-    id        Int      @id @default(autoincrement())
-    content   String
-    question  Question @relation(fields: [questionId], references: [id])
-    questionId Int
+  id         String    @id @default(uuid())
+  content    String
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
 }
 
 model Score {
-    id        Int      @id @default(autoincrement())
-    score     Int
-    user      User     @relation("QuizTaker", fields: [userId], references: [id])
-    userId    String
-    quiz      Quiz     @relation(fields: [quizId], references: [id])
-    quizId    Int
+  id     String    @id @default(uuid())
+  score  Int
+  user   User   @relation( fields: [userId], references: [id])
+  userId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  quizId String
 }
 
 enum UserRole {
-    user
-    admin
-    superAdmin
+  user
+  admin
+  superAdmin
 }
