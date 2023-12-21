@@ -1,13 +1,9 @@
-// quiz.interface.ts
-export interface QuizCreateInput {
+
+export interface IQuiz {
+    id: string;
     title: string;
     category: string;
-    // Add other properties as needed
-  }
-  
-  export interface QuizEditInput {
-    title?: string;
-    category?: string;
-    // Add other properties as needed
+    creator: { connect: { id: string } };
+
   }
   
