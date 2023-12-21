@@ -90,12 +90,6 @@ export const UserService = {
     return await prisma.user.findUnique({
       where: { id },
       include: {
-        bookings: true,
-        reviews: true,
-        cartItems: true,
-        blogPosts: true,
-        feedbacks: true,
-        notifications: true,
         profile: true,
       },
     });

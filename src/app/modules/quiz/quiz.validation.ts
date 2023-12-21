@@ -3,8 +3,10 @@ import { z } from 'zod';
 
 export const QuizValidationSchema = {
   createQuizZodSchema: z.object({
-    title: z.string(),
-    category: z.string(),
+    body: z.object({
+      title: z.string(),
+      category: z.string(),
+    })
   }),
 
   editQuizZodSchema: z.object({
