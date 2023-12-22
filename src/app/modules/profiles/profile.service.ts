@@ -22,19 +22,30 @@ const getProfile = async (userId: string): Promise<IProfile | null> => {
 
 const updateProfile = async (userId: string, payload: Partial<IProfile>) => {
   // Check for profile existence
-  const existingProfile = await prisma.profile.findUnique({
+  let existingProfile = await prisma.profile.findUnique({
     where: { userId },
   });
+
+  // If profile doesn't exist, create a new one
   if (!existingProfile) {
-    throw new Error('Profile not found for the provided user ID.');
+    existingProfile = await prisma.profile.create({
+      data: {
+        userId,
+        ...payload,
+      },
+    });
+  } else {
+    // Update the existing profile
+    existingProfile = await prisma.profile.update({
+      where: { userId },
+      data: payload,
+    });
   }
 
-  // Update the profile
-  return await prisma.profile.update({
-    where: { userId },
-    data: payload,
-  });
+  return existingProfile;
 };
+
+
 
 const deleteProfile = async (userId: string): Promise<IProfile> => {
   return await prisma.profile.delete({
