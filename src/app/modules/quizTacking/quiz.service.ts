@@ -6,17 +6,19 @@ const prisma = new PrismaClient();
 
 export const QuizService = {
   startQuizForUser: async (quizId: string, userId: string) => {
+    console.log('UserID in startQuizForUser:', userId);
+
     // Fetch quiz details and generate random questions for the user
     const quizDetails = await prisma.quiz.findUnique({
       where: { id: quizId },
-      include: { questions: { include: { options: true } } }, // Include options for each question
+      include: { questions: { include: { options: true } } },
     });
 
     if (!quizDetails) {
       throw new Error('Quiz not found');
     }
 
-    const randomQuestions = quizDetails.questions.sort(() => 0.5 - Math.random()).slice(0, 5); 
+    const randomQuestions = quizDetails.questions.sort(() => 0.5 - Math.random()).slice(0, 5);
 
     return {
       quizId: quizDetails.id,
@@ -34,6 +36,10 @@ export const QuizService = {
   },
 
   submitAnswer: async (quizId: string, userId: string, questionId: string, selectedOptionId: string) => {
+    if (!userId) {
+      throw new Error('User ID is required to submit the answer');
+    }
+
     const question = await prisma.question.findUnique({
       where: { id: questionId },
       include: { options: true },
@@ -49,15 +55,23 @@ export const QuizService = {
       throw new Error('Selected option not found');
     }
 
-    const isCorrect = selectedOption.isCorrect || false; // provided isCorrect field if available
+    const isCorrect = selectedOption.isCorrect || false;
 
-    // Update user scores and track progress
-    if (isCorrect) {
-      await prisma.score.create({ data: { score: 10, userId, quizId } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
     }
 
-    // track user's progress (e.g., update user's progress in the quiz)
+    if (isCorrect) {
+      await prisma.score.create({
+        data: { score: 10, userId, quizId },
+      });
+    }
 
     return { message: 'Answer submitted successfully', isCorrect };
   },
 };
+

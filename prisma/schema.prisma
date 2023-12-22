@@ -42,7 +42,7 @@ model Quiz {
   title         String
   category      String    
   questions     Question[]
-  creator       User       @relation( fields: [creatorId], references: [id])
+  creator       User       @relation( fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId     String
   scores        Score[]
 }
@@ -52,7 +52,7 @@ model Question {
   content         String
   options         Answer[]
   correctOptionId Int
-  quiz            Quiz     @relation(fields: [quizId], references: [id])
+  quiz            Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId          String
 }
 
@@ -60,7 +60,7 @@ model Answer {
   id         String    @id @default(uuid())
   content    String
   isCorrect  Boolean?  @default(false) 
-  question   Question @relation(fields: [questionId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId String
 }
 
@@ -68,9 +68,9 @@ model Answer {
 model Score {
   id     String    @id @default(uuid())
   score  Int
-  user   User   @relation( fields: [userId], references: [id])
+  user   User   @relation( fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId String
 }
 
