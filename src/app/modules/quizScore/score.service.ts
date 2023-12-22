@@ -1,8 +1,11 @@
 import { Prisma } from '@prisma/client';
-import { IOptions, calculatePagination } from '../../../helpers/paginationHelper';
+import {
+  IOptions,
+  calculatePagination,
+} from '../../../helpers/paginationHelper';
 import prisma from '../../../shared/prisma';
 
-
+type SortOrder = 'asc' | 'desc';
 
 export const ScoreService = {
   getUserScores: async (userId: string, options: IOptions, filters: any) => {
@@ -21,7 +24,7 @@ export const ScoreService = {
       skip,
       take,
       orderBy: {
-        [sortBy]: sortOrder,
+        score: sortOrder as SortOrder,
       },
     });
 
@@ -38,26 +41,27 @@ export const ScoreService = {
   },
 
   getLeaderboard: async (category: string) => {
-    const leaderboard = await prisma.score.groupBy({
-      by: ['userId'],
-      where: {
-        quiz: {
-          category,
+    try {
+      const leaderboard = await prisma.score.groupBy({
+        by: ['userId'],
+        where: {
+          quiz: {
+            category,
+          },
         },
-      },
-      _sum: {
-        score: true,
-      },
-      orderBy: {
         _sum: {
-          score: 'desc',
+          score: true,
         },
-      },
-      take: 10, // Adjust as needed
-    });
+        orderBy: {
+          _sum: {
+            score: 'desc',
+          },
+        },
+        take: 10,
+      });
 
-    const leaderboardData = await Promise.all(
-        leaderboard.map(async (entry) => {
+      const leaderboardData = await Promise.all(
+        leaderboard.map(async entry => {
           const user = await prisma.user.findUnique({
             where: {
               id: entry.userId,
@@ -66,16 +70,24 @@ export const ScoreService = {
               profile: true, // Include the profile relation
             },
           });
-      
+
+          console.log('User Data:', user);
+
+          // Check if the user has a profile and if the username is available
+          const userName = user?.profile?.username || 'Unknown';
+
           return {
             userId: entry.userId,
-            userName: user?.profile?.username || '',
+            userName,
             totalScore: entry._sum?.score || 0,
           };
         })
       );
-      
 
-    return leaderboardData;
+      return leaderboardData;
+    } catch (error) {
+      console.error('Error in getLeaderboard:', error);
+      throw error;
+    }
   },
 };

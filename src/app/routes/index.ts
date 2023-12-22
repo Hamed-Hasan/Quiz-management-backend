@@ -22,15 +22,15 @@ const moduleRoutes = [
     routes: ProfileRoutes,
   },
   {
-    path: '/quizzes', 
+    path: '/quizzes',
     routes: QuizManage,
   },
   {
-    path: '/quizzesTack', 
+    path: '/quizzesTack',
     routes: QuizTacking,
   },
   {
-    path: '/scores', 
+    path: '/scores',
     routes: ScoreRoutes,
   },
 ];

@@ -1,17 +1,10 @@
 import express from 'express';
 import { ScoreController } from './score.controller';
 
-
 const router = express.Router();
 
-router.get(
-  '/:userId',
-  ScoreController.viewScores
-);
+router.get('/:userId', ScoreController.viewScores);
 
-router.get(
-  '/leaderboard/:category',
-  ScoreController.leaderboard
-);
+router.get('/leaderboard/:category', ScoreController.leaderboard);
 
 export const ScoreRoutes = router;

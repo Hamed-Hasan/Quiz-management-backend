@@ -18,16 +18,18 @@ export const QuizService = {
       throw new Error('Quiz not found');
     }
 
-    const randomQuestions = quizDetails.questions.sort(() => 0.5 - Math.random()).slice(0, 5);
+    const randomQuestions = quizDetails.questions
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 5);
 
     return {
       quizId: quizDetails.id,
       title: quizDetails.title,
       category: quizDetails.category,
-      questions: randomQuestions.map((question) => ({
+      questions: randomQuestions.map(question => ({
         id: question.id,
         content: question.content,
-        options: question.options.map((option) => ({
+        options: question.options.map(option => ({
           id: option.id,
           content: option.content,
         })),
@@ -35,7 +37,12 @@ export const QuizService = {
     };
   },
 
-  submitAnswer: async (quizId: string, userId: string, questionId: string, selectedOptionId: string) => {
+  submitAnswer: async (
+    quizId: string,
+    userId: string,
+    questionId: string,
+    selectedOptionId: string
+  ) => {
     if (!userId) {
       throw new Error('User ID is required to submit the answer');
     }
@@ -49,7 +56,9 @@ export const QuizService = {
       throw new Error('Question not found');
     }
 
-    const selectedOption = question.options.find((option) => option.id === selectedOptionId);
+    const selectedOption = question.options.find(
+      option => option.id === selectedOptionId
+    );
 
     if (!selectedOption) {
       throw new Error('Selected option not found');
@@ -74,4 +83,3 @@ export const QuizService = {
     return { message: 'Answer submitted successfully', isCorrect };
   },
 };
-

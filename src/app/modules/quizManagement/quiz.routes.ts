@@ -1,6 +1,6 @@
 import express from 'express';
 import { QuizController } from './quiz.controller';
-import { QuizValidationSchema } from './quiz.validation'; 
+import { QuizValidationSchema } from './quiz.validation';
 import validateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();

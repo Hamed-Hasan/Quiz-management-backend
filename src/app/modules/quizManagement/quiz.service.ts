@@ -1,11 +1,11 @@
-import { Quiz } from "@prisma/client";
-import prisma from "../../../shared/prisma";
+import { Quiz } from '@prisma/client';
+import prisma from '../../../shared/prisma';
 
-export interface QuizService {
+export type QuizService = {
   createQuiz(quizData: Quiz): Promise<Quiz>;
   editQuiz(quizId: string, quizData: Quiz): Promise<Quiz>;
   deleteQuiz(quizId: string): Promise<void>;
-}
+};
 
 export const QuizService: QuizService = {
   async createQuiz(quizData: Quiz): Promise<Quiz> {
@@ -29,4 +29,3 @@ export const QuizService: QuizService = {
     });
   },
 };
-
