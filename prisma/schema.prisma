@@ -12,7 +12,7 @@ model User {
   email               String         @unique
   password            String
   needsPasswordChange Boolean?       @default(false)
-  role                UserRole       @default(user)
+  role                UserRole       @default(superAdmin)
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @default(now()) @updatedAt
 
